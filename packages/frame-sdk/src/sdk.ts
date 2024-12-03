@@ -36,6 +36,7 @@ export const sdk: FrameSDK = {
     ready: frameHost.ready.bind(frameHost),
     close: frameHost.close.bind(frameHost),
     openUrl: frameHost.openUrl.bind(frameHost),
+    addFrame: frameHost.addFrame.bind(frameHost),
   },
   wallet: {
     ethProvider: provider,
