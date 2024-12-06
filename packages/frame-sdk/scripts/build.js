@@ -1,4 +1,4 @@
-const esbuild = require('esbuild')
+import esbuild from 'esbuild'
 
 esbuild.buildSync({
   entryPoints: ['src/index.ts'],
