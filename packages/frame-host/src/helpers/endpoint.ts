@@ -5,7 +5,7 @@ import { forwardProviderEvents, wrapProviderRequest } from "./provider";
 import { HostEndpoint } from "../types";
 
 /**
-  * @returns function to cleanup provider listeners
+  * @returns function to clean up provider listeners
   */
 export function exposeToEndpoint({ 
   endpoint,

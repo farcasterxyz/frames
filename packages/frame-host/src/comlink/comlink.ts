@@ -23,7 +23,7 @@ export const finalizer = Symbol("Comlink.finalizer");
 const throwMarker = Symbol("Comlink.thrown");
 
 /**
- * Interface of values that were marked to be proxied with `comlink.proxy()`.
+ * The interface of values is marked to be proxied with `comlink.proxy()`.
  * Can also be implemented by classes.
  */
 export interface ProxyMarked {
@@ -31,7 +31,7 @@ export interface ProxyMarked {
 }
 
 /**
- * Takes a type and wraps it in a Promise, if it not already is one.
+ * Takes a type and wraps it in a Promise, if it is not already one.
  * This is to avoid `Promise<Promise<T>>`.
  *
  * This is the inverse of `Unpromisify<T>`.
@@ -48,7 +48,7 @@ type Unpromisify<P> = P extends Promise<infer T> ? T : P;
 /**
  * Takes the raw type of a remote property and returns the type that is visible to the local thread on the proxy.
  *
- * Note: This needs to be its own type alias, otherwise it will not distribute over unions.
+ * Note: This needs to be its own type alias, otherwise it will not be distributed over unions.
  * See https://www.typescriptlang.org/docs/handbook/advanced-types.html#distributive-conditional-types
  */
 type RemoteProperty<T> =
@@ -63,7 +63,7 @@ type RemoteProperty<T> =
  *
  * This is the inverse of `RemoteProperty<T>`.
  *
- * Note: This needs to be its own type alias, otherwise it will not distribute over unions. See
+ * Note: This needs to be its own type alias, otherwise it will not be distributed over unions. See
  * https://www.typescriptlang.org/docs/handbook/advanced-types.html#distributive-conditional-types
  */
 type LocalProperty<T> = T extends Function | ProxyMarked
@@ -85,7 +85,7 @@ export type UnproxyOrClone<T> = T extends RemoteObject<ProxyMarked>
  * Takes the raw type of a remote object in the other thread and returns the type as it is visible to the local thread
  * when proxied with `Comlink.proxy()`.
  *
- * This does not handle call signatures, which is handled by the more general `Remote<T>` type.
+ * This does not handle call signatures, which are handled by the more general `Remote<T>` type.
  *
  * @template T The raw type of a remote object as seen in the other thread.
  */
@@ -94,7 +94,7 @@ export type RemoteObject<T> = { [P in keyof T]: RemoteProperty<T[P]> };
  * Takes the type of an object as a remote thread would see it through a proxy (e.g. when passed in as a function
  * argument) and returns the type that the local thread has to supply.
  *
- * This does not handle call signatures, which is handled by the more general `Local<T>` type.
+ * This does not handle call signatures, which are handled by the more general `Local<T>` type.
  *
  * This is the inverse of `RemoteObject<T>`.
  *
