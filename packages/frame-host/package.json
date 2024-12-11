@@ -18,7 +18,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@farcaster/frame-core": "^0.0.13",
+    "@farcaster/frame-core": "^0.0.14",
     "ox": "^0.4.0"
   }
 }
