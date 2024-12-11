@@ -1,5 +1,14 @@
 # @farcaster/frame-host
 
+## 0.0.15
+
+### Patch Changes
+
+- f81bace: bump frame-core depend in frame-host
+- Updated dependencies [2e0e776]
+- Updated dependencies [f81bace]
+  - @farcaster/frame-core@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @farcaster/frame-core
 
+## 0.0.15
+
+### Patch Changes
+
+- 2e0e776: fix esm distro of frame-core
+- f81bace: bump frame-core depend in frame-host
+
 ## 0.0.14
 
 ### Patch Changes
