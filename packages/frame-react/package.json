@@ -1,0 +1,25 @@
+{
+  "name": "@farcaster/frame-react",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "devDependencies": {
+    "@farcaster/tsconfig": "*",
+    "@types/react": "^18.3.12",
+    "react": "^18.3.1",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "@farcaster/frame-sdk": "^0.0.16",
+    "react": ">=18.0.0"
+  }
+}

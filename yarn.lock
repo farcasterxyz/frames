@@ -1167,14 +1167,6 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.24.0.tgz#168ab1c7e1c318b922637fad8f339d48b01e1244"
   integrity sha512-7IAFPrjSQIJrGsK6flwg7NFmwBoSTyF3rl7If0hNUFQU4ilTsEPL6GuMuU9BfIWVVGuRnuIidkSMC+c0Otu8IA==
 
-"@farcaster/frame-core@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@farcaster/frame-core/-/frame-core-0.0.13.tgz#cd4739488a7492f9b4f7b302f0220e8955b3d4aa"
-  integrity sha512-PXs2SJnt8GAKw4JspfBSWLKfvx1mGiWGZ8aB46ehMQMUtsN7k5gzSIdgWLpN47OeVEsi1X86fW6i8YkoL6L/nQ==
-  dependencies:
-    ox "^0.4.0"
-    zod "^3.23.8"
-
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
