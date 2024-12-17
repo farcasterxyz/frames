@@ -2,8 +2,8 @@
   "name": "frames",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "turbo run build --filter=@farcaster/frame-core --filter=@farcaster/frame-sdk --filter=@farcaster/frame-host",
+    "dev": "turbo run build --filter=@farcaster/frame-core --filter=@farcaster/frame-sdk && turbo run dev",
     "typecheck": "turbo typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "publish-packages": "turbo run build typecheck && changeset version && changeset publish"
