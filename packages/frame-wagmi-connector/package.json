@@ -19,7 +19,7 @@
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "viem": "^2.21.55",
-    "wagmi": "^2.14.1"
+    "@wagmi/core": "^2.14.1"
   },
   "publishConfig": {
     "access": "public"
@@ -27,6 +27,6 @@
   "peerDependencies": {
     "@farcaster/frame-sdk": "^0.0.20",
     "viem": "^2.21.55",
-    "wagmi": "^2.14.1"
+    "@wagmi/core": "^2.14.1"
   }
 }
