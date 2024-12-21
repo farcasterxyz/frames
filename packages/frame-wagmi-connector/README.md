@@ -9,5 +9,5 @@ Not yet stable. [Learn more](https://github.com/farcasterxyz/frames/wiki/frames-
 Install using your favorite manager:
 
 ```
-npm install @farcaster/frame-connector
+npm install @farcaster/frame-wagmi-connector
 ```
