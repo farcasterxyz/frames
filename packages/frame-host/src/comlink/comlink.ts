@@ -361,7 +361,7 @@ export function expose(
         const [wireValue, transferables] = toWireValue(returnValue)
         ep.postMessage({ ...wireValue, id }, transferables)
         if (type === MessageType.RELEASE) {
-          // detach and deactive after sending release response above.
+          // detach and deactivate after sending release response above.
           ep.removeEventListener('message', callback as any)
           closeEndPoint(ep)
           if (finalizer in obj && typeof obj[finalizer] === 'function') {

@@ -9,7 +9,7 @@ import {
 
 export const domainFrameConfigSchema = z.object({
   // 0.0.0 and 0.0.1 are not technically part of the spec but kept for
-  // backwards compatibilty. next should always resolve to the most recent
+  // backwards compatibility. next should always resolve to the most recent
   // schema version.
   version: z.union([
     z.literal('0.0.0'),
