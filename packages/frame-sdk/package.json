@@ -1,6 +1,6 @@
 {
   "name": "@farcaster/frame-sdk",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
@@ -10,7 +10,10 @@
     "build:umd": "node scripts/build.js",
     "typecheck": "tsc --noEmit"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
     "@farcaster/tsconfig": "workspace:*",
     "esbuild": "^0.24.2",

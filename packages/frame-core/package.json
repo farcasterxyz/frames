@@ -1,6 +1,6 @@
 {
   "name": "@farcaster/frame-core",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "dist/index.js",
   "module": "esm/index.js",
   "scripts": {
@@ -11,7 +11,11 @@
     "build:esm": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
-  "files": ["dist", "esm", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "src"
+  ],
   "devDependencies": {
     "@farcaster/tsconfig": "workspace:*",
     "typescript": "^5.7.2"

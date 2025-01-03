@@ -1,5 +1,16 @@
 # @farcaster/frame-core
 
+## 0.0.23
+
+### Patch Changes
+
+- [#88](https://github.com/farcasterxyz/frames/pull/88) [`5b8367c`](https://github.com/farcasterxyz/frames/commit/5b8367c37186c7bb9691ae0f7336c5203098239f) Thanks [@deodad](https://github.com/deodad)! - - added ChannelLocationContext type
+  - export all context types under Context name
+  - made naming of context types consistent and simpler
+    - FrameLocationContextCastEmbed -> CastEmbedLocationContext
+    - FrameLocationContextNotification -> NotificationLocationContext
+    - FrameLocationContextLauncher -> LauncherNotificationContext
+
 ## 0.0.22
 
 ### Patch Changes
