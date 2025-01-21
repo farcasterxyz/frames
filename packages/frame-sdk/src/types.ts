@@ -20,7 +20,7 @@ declare global {
 }
 
 /** Combines members of an intersection into a readable type. */
-// https://twitter.com/mattpocockuk/status/1622730173446557697?s=20&t=v01xkqU3KO0Mg
+// https://x.com/mattpocockuk/status/1622730173446557697?s=20&t=v01xkqU3KO0Mg
 type Compute<type> = { [key in keyof type]: type[key] } & unknown
 
 export type EventMap = {
