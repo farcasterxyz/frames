@@ -1,0 +1,45 @@
+{
+  "name": "frames-v2-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@farcaster/auth-kit": "^0.6.0",
+    "@farcaster/frame-core": "workspace:*",
+    "@farcaster/frame-node": "workspace:*",
+    "@farcaster/frame-sdk": "workspace:*",
+    "@farcaster/frame-wagmi-connector": "workspace:*",
+    "@radix-ui/react-label": "^2.1.1",
+    "@tanstack/react-query": "^5.61.0",
+    "@upstash/redis": "^1.34.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "mipd": "^0.0.7",
+    "next": "15.0.3",
+    "next-auth": "^4.24.11",
+    "ox": "^0.4.2",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.21.55",
+    "wagmi": "^2.14.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
