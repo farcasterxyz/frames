@@ -1,6 +1,6 @@
 {
   "name": "@farcaster/frame-host-react-native",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
