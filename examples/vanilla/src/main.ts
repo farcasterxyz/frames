@@ -45,4 +45,5 @@ const { endpoint } = exposeToIframe({
   sdk: frameHost,
   ethProvider: window.ethereum,
   frameOrigin: window.origin,
+  debug: true,
 })

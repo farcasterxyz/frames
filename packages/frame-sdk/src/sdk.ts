@@ -1,8 +1,15 @@
-import { AddFrame, type FrameClientEvent, SignIn } from '@farcaster/frame-core'
+import {
+  AddFrame,
+  type FrameClientEvent,
+  type JsonRpc,
+  SignIn,
+} from '@farcaster/frame-core'
 import { EventEmitter } from 'eventemitter3'
 import { frameHost } from './frameHost'
 import { provider } from './provider'
 import type { Emitter, EventMap, FrameSDK } from './types'
+import { transport } from './transport'
+import { RpcRequest, type RpcSchema } from 'ox'
 
 export function createEmitter(): Emitter {
   const emitter = new EventEmitter<EventMap>()
@@ -29,12 +36,97 @@ export function createEmitter(): Emitter {
 
 const emitter = createEmitter()
 
+const pendingRequestCallbacks: Record<
+  string,
+  (response: JsonRpc.Response) => void
+> = {}
+
+const store = RpcRequest.createStore<JsonRpc.Schema>()
+
+export const request = <
+  methodName extends RpcSchema.ExtractMethodName<JsonRpc.Schema>,
+>(
+  parameters: RpcSchema.ExtractRequest<JsonRpc.Schema, methodName>,
+): Promise<RpcSchema.ExtractReturnType<JsonRpc.Schema, methodName>> => {
+  return new Promise((resolve, reject) => {
+    // @ts-expect-error
+    const request = store.prepare<methodName>(parameters)
+    transport.postMessage(request)
+
+    const handleResponse = (response: JsonRpc.Response) => {
+      try {
+        resolve(
+          // @ts-expect-error
+          RpcResponse.parse<JsonRpc.Response, unknown, true>(response, {
+            request,
+          }),
+        )
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    pendingRequestCallbacks[request.id] = handleResponse
+  })
+}
+
+function listener(ev: MessageEvent) {
+  if (!ev || !ev.data || typeof ev.data === 'string') {
+    return
+  }
+
+  // // TODO: we may want a way to restrict origins
+  // // TODO: runtime type check for event types
+
+  if (ev.data.source) {
+    if (ev.data.source === 'farcaster-mini-app-response') {
+      const response = ev.data.payload as JsonRpc.Response
+      console.log('received frame host response: ', response)
+
+      const callback = pendingRequestCallbacks[response.id]
+      if (callback) {
+        delete pendingRequestCallbacks[response.id]
+        return callback(response)
+      }
+    }
+
+    if (ev.data.source === 'farcaster-mini-app-host-event') {
+      const frameEvent = ev.data.payload as FrameClientEvent
+      console.log('received frame host event: ', frameEvent)
+      if (frameEvent.event === 'primary_button_clicked') {
+        emitter.emit('primaryButtonClicked')
+      } else if (frameEvent.event === 'frame_added') {
+        emitter.emit('frameAdded', {
+          notificationDetails: frameEvent.notificationDetails,
+        })
+      } else if (frameEvent.event === 'frame_add_rejected') {
+        emitter.emit('frameAddRejected', { reason: frameEvent.reason })
+      } else if (frameEvent.event === 'frame_removed') {
+        emitter.emit('frameRemoved')
+      } else if (frameEvent.event === 'notifications_enabled') {
+        emitter.emit('notificationsEnabled', {
+          notificationDetails: frameEvent.notificationDetails,
+        })
+      } else if (frameEvent.event === 'notifications_disabled') {
+        emitter.emit('notificationsDisabled')
+      }
+    }
+  }
+}
+
+// @ts-expect-error
+transport.addEventListener('', listener)
+
 export const sdk: FrameSDK = {
   ...emitter,
-  context: frameHost.context,
+  get context() {
+    return request({ method: 'app_context' })
+  },
   actions: {
+    async ready() {
+      return await request({ method: 'app_ready' })
+    },
     setPrimaryButton: frameHost.setPrimaryButton.bind(frameHost),
-    ready: frameHost.ready.bind(frameHost),
     close: frameHost.close.bind(frameHost),
     viewProfile: frameHost.viewProfile.bind(frameHost),
     viewToken: frameHost.viewToken.bind(frameHost),
@@ -74,60 +166,4 @@ export const sdk: FrameSDK = {
   wallet: {
     ethProvider: provider,
   },
-}
-
-// Required to pass SSR
-if (typeof document !== 'undefined') {
-  // react native webview events
-  document.addEventListener('FarcasterFrameEvent', (event) => {
-    if (event instanceof MessageEvent) {
-      const frameEvent = event.data as FrameClientEvent
-      if (frameEvent.event === 'primary_button_clicked') {
-        emitter.emit('primaryButtonClicked')
-      } else if (frameEvent.event === 'frame_added') {
-        emitter.emit('frameAdded', {
-          notificationDetails: frameEvent.notificationDetails,
-        })
-      } else if (frameEvent.event === 'frame_add_rejected') {
-        emitter.emit('frameAddRejected', { reason: frameEvent.reason })
-      } else if (frameEvent.event === 'frame_removed') {
-        emitter.emit('frameRemoved')
-      } else if (frameEvent.event === 'notifications_enabled') {
-        emitter.emit('notificationsEnabled', {
-          notificationDetails: frameEvent.notificationDetails,
-        })
-      } else if (frameEvent.event === 'notifications_disabled') {
-        emitter.emit('notificationsDisabled')
-      }
-    }
-  })
-}
-
-// Required to pass SSR
-if (typeof window !== 'undefined') {
-  // web events
-  window.addEventListener('message', (event) => {
-    if (event instanceof MessageEvent) {
-      if (event.data.type === 'frameEvent') {
-        const frameEvent = event.data.event as FrameClientEvent
-        if (frameEvent.event === 'primary_button_clicked') {
-          emitter.emit('primaryButtonClicked')
-        } else if (frameEvent.event === 'frame_added') {
-          emitter.emit('frameAdded', {
-            notificationDetails: frameEvent.notificationDetails,
-          })
-        } else if (frameEvent.event === 'frame_add_rejected') {
-          emitter.emit('frameAddRejected', { reason: frameEvent.reason })
-        } else if (frameEvent.event === 'frame_removed') {
-          emitter.emit('frameRemoved')
-        } else if (frameEvent.event === 'notifications_enabled') {
-          emitter.emit('notificationsEnabled', {
-            notificationDetails: frameEvent.notificationDetails,
-          })
-        } else if (frameEvent.event === 'notifications_disabled') {
-          emitter.emit('notificationsDisabled')
-        }
-      }
-    }
-  })
 }

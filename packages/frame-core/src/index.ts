@@ -1,5 +1,8 @@
 export * from './actions'
 export * from './wallet'
 export * as Context from './context'
+export * as JsonRpc from './jsonRpc'
+export * as Transport from './transport'
+export * as Util from './util'
 export * from './types'
 export * from './schemas'

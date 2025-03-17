@@ -32,7 +32,7 @@
     "vitest": "^2.1.9"
   },
   "dependencies": {
-    "ox": "^0.4.4",
+    "ox": "^0.6.10",
     "zod": "^3.24.1"
   },
   "publishConfig": {

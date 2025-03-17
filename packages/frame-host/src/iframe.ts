@@ -1,8 +1,10 @@
-import type { FrameHost } from '@farcaster/frame-core'
-import type { Provider } from 'ox'
-import * as Comlink from './comlink'
-import { exposeToEndpoint } from './helpers/endpoint'
+import type { JsonRpc, WireFrameHost, FrameHost } from '@farcaster/frame-core'
+import { RpcResponse, type Provider } from 'ox'
+import { exposeToEndpoint, listenToEndpoint } from './helpers/endpoint'
 import type { HostEndpoint } from './types'
+import { wrapHandlers } from './helpers/sdk'
+import { forwardProviderEvents, wrapProviderRequest } from './helpers/provider'
+import { createHandleRequest } from './host'
 
 /**
  * An endpoint of communicating with an iFrame
@@ -17,8 +19,11 @@ export function createIframeEndpoint({
   debug?: boolean
 }): HostEndpoint {
   return {
-    // when is contentWindow null
-    ...Comlink.windowEndpoint(iframe.contentWindow!),
+    postMessage: (msg: unknown) => {
+      iframe.contentWindow?.postMessage(msg, targetOrigin)
+    },
+    addEventListener: window.addEventListener.bind(window),
+    removeEventListener: window.removeEventListener.bind(window),
     emit: (event) => {
       if (debug) {
         console.debug('frameEvent', event)
@@ -29,7 +34,17 @@ export function createIframeEndpoint({
         event,
       }
 
+      // v0 path
       iframe.contentWindow?.postMessage(wireEvent, targetOrigin)
+
+      // v1 path
+      iframe.contentWindow?.postMessage(
+        {
+          source: 'farcaster-mini-app-host-event',
+          payload: event,
+        },
+        targetOrigin,
+      )
     },
     emitEthProvider: (event, params) => {
       if (debug) {
@@ -65,7 +80,8 @@ export function exposeToIframe({
     targetOrigin: frameOrigin,
     debug,
   })
-  const cleanup = exposeToEndpoint({
+
+  const comlinkCleanup = exposeToEndpoint({
     endpoint,
     sdk,
     ethProvider,
@@ -73,8 +89,36 @@ export function exposeToIframe({
     debug,
   })
 
+  const extendedSdk = wrapHandlers(sdk as FrameHost)
+  if (ethProvider) {
+    extendedSdk.ethProviderRequestV2 = wrapProviderRequest({
+      provider: ethProvider,
+      debug,
+    })
+  }
+
+  const providerCleanup = (() => {
+    if (ethProvider) {
+      return forwardProviderEvents({ provider: ethProvider, endpoint })
+    }
+  })()
+
+  const handleRequest = createHandleRequest({
+    sdk: extendedSdk,
+  })
+
+  const disconnect = listenToEndpoint({
+    endpoint,
+    frameOrigin,
+    handleRequest,
+  })
+
   return {
     endpoint,
-    cleanup,
+    cleanup: () => {
+      disconnect()
+      comlinkCleanup()
+      providerCleanup?.()
+    },
   }
 }

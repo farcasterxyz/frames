@@ -1,10 +1,46 @@
-import type { FrameHost } from '@farcaster/frame-core'
-import type { Provider } from 'ox'
+import { Util, type FrameHost, type JsonRpc } from '@farcaster/frame-core'
+import type { Provider, RpcRequest, RpcResponse } from 'ox'
 import { useEffect } from 'react'
 import * as Comlink from '../comlink'
 import type { HostEndpoint } from '../types'
-import { forwardProviderEvents, wrapProviderRequest } from './provider'
+import { wrapProviderRequest } from './provider'
 import { wrapHandlers } from './sdk'
+
+export function listenToEndpoint({
+  endpoint,
+  frameOrigin,
+  handleRequest,
+}: {
+  endpoint: HostEndpoint
+  frameOrigin: string
+  handleRequest: (
+    request: RpcRequest.RpcRequest,
+  ) => Promise<RpcResponse.RpcResponse>
+}) {
+  async function listener(ev: MessageEvent) {
+    if (!ev || !ev.data) {
+      return
+    }
+
+    if (!Util.isAllowedOrigin([frameOrigin], ev.origin)) {
+      return
+    }
+
+    // TODO better runtime checks, share
+    if (ev.data.source && ev.data.source === 'farcaster-mini-app-request') {
+      endpoint.postMessage({
+        source: 'farcaster-mini-app-response',
+        payload: await handleRequest(ev.data.payload as JsonRpc.Request),
+      })
+    }
+  }
+
+  window.addEventListener('message', listener)
+
+  return () => {
+    window.removeEventListener('message', listener)
+  }
+}
 
 /**
  * @returns function to cleanup provider listeners
@@ -24,21 +60,14 @@ export function exposeToEndpoint({
 }) {
   const extendedSdk = wrapHandlers(sdk as FrameHost)
 
-  let cleanup: (() => void) | undefined
   if (ethProvider) {
     extendedSdk.ethProviderRequestV2 = wrapProviderRequest({
       provider: ethProvider,
       debug,
     })
-    cleanup = forwardProviderEvents({ provider: ethProvider, endpoint })
   }
 
-  const unexpose = Comlink.expose(extendedSdk, endpoint, [frameOrigin])
-
-  return () => {
-    cleanup?.()
-    unexpose()
-  }
+  return Comlink.expose(extendedSdk, endpoint, [frameOrigin])
 }
 
 export function useExposeToEndpoint({

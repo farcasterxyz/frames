@@ -20,7 +20,7 @@ export function useWebViewRpcAdapter({
   ethProvider?: Provider.Provider
   debug?: boolean
 }) {
-  const endpointRef = useRef<WebViewEndpoint>()
+  const endpointRef = useRef<WebViewEndpoint>(undefined)
 
   const onMessage: WebViewProps['onMessage'] = useCallback(
     (e: WebViewMessageEvent) => {
@@ -55,7 +55,7 @@ export function useWebViewRpcAdapter({
 }
 
 export function useWebViewRpcEndpoint(webViewRef: RefObject<WebView>) {
-  const endpointRef = useRef<WebViewEndpoint>()
+  const endpointRef = useRef<WebViewEndpoint>(undefined)
 
   const onMessage: WebViewProps['onMessage'] = useCallback(
     (e: WebViewMessageEvent) => {
