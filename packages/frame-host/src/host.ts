@@ -1,55 +1,63 @@
-import { type RpcRequest, RpcResponse } from 'ox'
-import type { WireFrameHost } from '@farcaster/frame-core'
+import { type WireFrameHost, Provider } from '@farcaster/frame-core'
+import { RpcResponse } from 'ox'
 
-export function createHandleRequest({
+export function fromSDK({
   sdk,
 }: {
   sdk: WireFrameHost
-}) {
-  return async function handleRequest(
-    request: RpcRequest.RpcRequest,
-  ): Promise<RpcResponse.RpcResponse> {
-    try {
-      const result = await (async () => {
-        try {
-          switch (request.method) {
-            case 'app_context':
-              return sdk.context
-            case 'app_ready':
-              return sdk.ready() ?? undefined
-            default:
-              throw new RpcResponse.MethodNotSupportedError()
-          }
-        } catch (e) {
-          if (e instanceof RpcResponse.BaseError) {
-            throw e
-          }
+}): Provider.Provider {
+  const emitter = Provider.createEmitter()
 
-          throw new RpcResponse.InternalError()
+  // @ts-expect-error
+  return {
+    ...emitter,
+    async request({ method }) {
+      try {
+        switch (method) {
+          case 'app_context':
+            return sdk.context as never
+          case 'app_ready':
+            return sdk.ready() as never
+          default:
+            throw new RpcResponse.MethodNotSupportedError()
         }
-      })()
-
-      return {
-        id: request.id,
-        jsonrpc: request.jsonrpc,
-        result,
-      }
-    } catch (e) {
-      if (e instanceof RpcResponse.BaseError) {
-        return {
-          id: request.id,
-          jsonrpc: request.jsonrpc,
-          error: {
-            code: e.code,
-            message: e.message,
-            data: e.data,
-          },
+      } catch (e) {
+        if (e instanceof RpcResponse.BaseError) {
+          throw e
         }
-      }
 
-      throw e
-    }
+        // TODO message?
+        throw new RpcResponse.InternalError()
+      }
+    },
   }
 }
 
-// SDK to wire functions
+// // SDK to wire functions
+// export function handleJsonRpc({ request }) {
+//         const request = ev.data.payload as JsonRpc.Request
+
+//       const result = await (async () => {
+//         try {
+//           const result = await frameProvider.request(request)
+
+//           return {
+//             id: request.id,
+//             jsonrpc: request.jsonrpc,
+//             result,
+//           }
+//         } catch (e) {
+//           if (e instanceof RpcResponse.BaseError) {
+//             return {
+//               id: request.id,
+//               jsonrpc: request.jsonrpc,
+//               error: {
+//                 code: e.code,
+//                 message: e.message,
+//                 data: e.data,
+//               },
+//             }
+//           }
+//         }
+//       })()
+// }

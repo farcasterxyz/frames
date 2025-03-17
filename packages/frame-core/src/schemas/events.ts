@@ -2,20 +2,20 @@ import { z } from 'zod'
 import { notificationDetailsSchema } from './notifications'
 
 export const eventFrameAddedSchema = z.object({
-  event: z.literal('frame_added'),
+  event: z.literal('frameAdded'),
   notificationDetails: notificationDetailsSchema.optional(),
 })
 
 export type EventFrameAdded = z.infer<typeof eventFrameAddedSchema>
 
 export const eventFrameRemovedSchema = z.object({
-  event: z.literal('frame_removed'),
+  event: z.literal('frameRemoved'),
 })
 
 export type EventFrameRemoved = z.infer<typeof eventFrameRemovedSchema>
 
 export const eventNotificationsEnabledSchema = z.object({
-  event: z.literal('notifications_enabled'),
+  event: z.literal('notificationsEnabled'),
   notificationDetails: notificationDetailsSchema.required(),
 })
 
@@ -24,7 +24,7 @@ export type EventNotificationsEnabled = z.infer<
 >
 
 export const notificationsDisabledSchema = z.object({
-  event: z.literal('notifications_disabled'),
+  event: z.literal('notificationsDisabled'),
 })
 
 export type EventNotificationsDisabled = z.infer<

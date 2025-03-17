@@ -67,12 +67,12 @@ export type FrameHost = {
 }
 
 export type EventFrameAddRejected = {
-  event: 'frame_add_rejected'
+  event: 'frameAddRejected'
   reason: AddFrame.AddFrameRejectedReason
 }
 
 export type EventPrimaryButtonClicked = {
-  event: 'primary_button_clicked'
+  event: 'primaryButtonClicked'
 }
 
 export type FrameClientEvent =
@@ -83,3 +83,8 @@ export type FrameClientEvent =
   | EventNotificationsDisabled
   | EventPrimaryButtonClicked
   | Ethereum.EventEip6963AnnounceProvider
+
+export type FrameHostEventMessage = {
+  source: 'frame-host-event'
+  payload: FrameClientEvent
+}

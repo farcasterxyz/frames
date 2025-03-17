@@ -43,6 +43,9 @@ setTimeout(() => {
       .then((signature) => {
         alert('You signed:\n' + signature)
       })
+      .catch((error) => {
+        console.warn('sign failed: ', error)
+      })
   }
 
   document.querySelector<HTMLDivElement>('#close')!.onclick = () => {

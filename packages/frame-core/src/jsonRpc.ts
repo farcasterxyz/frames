@@ -23,10 +23,12 @@ export type Request = RpcRequest.RpcRequest<Schema>
 export type Response = RpcResponse.RpcResponse<Schema>
 
 export type RequestFn = <
-  methodName extends RpcSchema.ExtractMethodName<Schema>,
+  methodName extends RpcSchema.MethodNameGeneric<Schema>,
 >(
   parameters: RpcSchema.ExtractRequest<Schema, methodName>,
-) => Promise<RpcSchema.ExtractReturnType<Schema, methodName>>
+) => Promise<
+  RpcResponse.RpcResponse<RpcSchema.ExtractReturnType<Schema, methodName>>
+>
 
 export type Transport = {
   request: RequestFn

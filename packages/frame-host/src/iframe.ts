@@ -1,10 +1,13 @@
-import type { JsonRpc, WireFrameHost, FrameHost } from '@farcaster/frame-core'
-import { RpcResponse, type Provider } from 'ox'
-import { exposeToEndpoint, listenToEndpoint } from './helpers/endpoint'
-import type { HostEndpoint } from './types'
+import type { FrameHost, MessageChannel } from '@farcaster/frame-core'
+import type { Provider } from 'ox'
+import { exposeProvider, exposeToEndpoint } from './helpers/endpoint'
+import {
+  wrapProviderRequest,
+  exposeProvider as exposeEthProvider,
+} from './helpers/provider'
 import { wrapHandlers } from './helpers/sdk'
-import { forwardProviderEvents, wrapProviderRequest } from './helpers/provider'
-import { createHandleRequest } from './host'
+import { fromSDK } from './host'
+import type { HostEndpoint } from './types'
 
 /**
  * An endpoint of communicating with an iFrame
@@ -40,7 +43,7 @@ export function createIframeEndpoint({
       // v1 path
       iframe.contentWindow?.postMessage(
         {
-          source: 'farcaster-mini-app-host-event',
+          source: 'farcaster-host-event',
           payload: event,
         },
         targetOrigin,
@@ -57,7 +60,20 @@ export function createIframeEndpoint({
         params,
       }
 
+      // v0 path
       iframe.contentWindow?.postMessage(wireEvent, targetOrigin)
+
+      // v1 path
+      iframe.contentWindow?.postMessage(
+        {
+          source: 'farcaster-eth-provider-event',
+          payload: {
+            event,
+            params,
+          },
+        },
+        targetOrigin,
+      )
     },
   }
 }
@@ -81,6 +97,27 @@ export function exposeToIframe({
     debug,
   })
 
+  endpoint.addEventListener('message', (ev) => {
+    if (
+      !(ev instanceof MessageEvent) ||
+      typeof ev.data !== 'object' ||
+      !('source' in ev.data)
+    ) {
+      return
+    }
+
+    const message = ev.data as MessageChannel.MiniAppMessage
+    if (message.source === 'farcaster-mini-app-request') {
+      console.log('received app request', message.payload)
+      return
+    }
+
+    if (message.source === 'farcaster-eth-provider-request') {
+      console.log('received eth provider request', message.payload)
+      return
+    }
+  })
+
   const comlinkCleanup = exposeToEndpoint({
     endpoint,
     sdk,
@@ -97,28 +134,32 @@ export function exposeToIframe({
     })
   }
 
-  const providerCleanup = (() => {
+  const unexposeEthProvider = (() => {
     if (ethProvider) {
-      return forwardProviderEvents({ provider: ethProvider, endpoint })
+      return exposeEthProvider({
+        endpoint,
+        frameOrigin,
+        provider: ethProvider,
+      })
     }
   })()
 
-  const handleRequest = createHandleRequest({
+  const frameProvider = fromSDK({
     sdk: extendedSdk,
   })
 
-  const disconnect = listenToEndpoint({
+  const unexposeProvider = exposeProvider({
     endpoint,
     frameOrigin,
-    handleRequest,
+    frameProvider,
   })
 
   return {
     endpoint,
     cleanup: () => {
-      disconnect()
+      unexposeProvider()
+      unexposeEthProvider?.()
       comlinkCleanup()
-      providerCleanup?.()
     },
   }
 }

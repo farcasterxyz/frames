@@ -1,40 +1,19 @@
 import {
   AddFrame,
-  type FrameClientEvent,
   type JsonRpc,
+  type MessageChannel,
+  Provider,
   SignIn,
 } from '@farcaster/frame-core'
-import { EventEmitter } from 'eventemitter3'
+import { RpcRequest, RpcResponse, type RpcSchema } from 'ox'
+import { announceProvider } from './ethProvider'
 import { frameHost } from './frameHost'
-import { provider } from './provider'
-import type { Emitter, EventMap, FrameSDK } from './types'
+import * as EthProvider from './ethProvider'
 import { transport } from './transport'
-import { RpcRequest, type RpcSchema } from 'ox'
+import type { FrameSDK } from './types'
+import type { EIP1193Provider } from 'mipd'
 
-export function createEmitter(): Emitter {
-  const emitter = new EventEmitter<EventMap>()
-
-  return {
-    get eventNames() {
-      return emitter.eventNames.bind(emitter)
-    },
-    get listenerCount() {
-      return emitter.listenerCount.bind(emitter)
-    },
-    get listeners() {
-      return emitter.listeners.bind(emitter)
-    },
-    addListener: emitter.addListener.bind(emitter),
-    emit: emitter.emit.bind(emitter),
-    off: emitter.off.bind(emitter),
-    on: emitter.on.bind(emitter),
-    once: emitter.once.bind(emitter),
-    removeAllListeners: emitter.removeAllListeners.bind(emitter),
-    removeListener: emitter.removeListener.bind(emitter),
-  }
-}
-
-const emitter = createEmitter()
+const emitter = Provider.createEmitter()
 
 const pendingRequestCallbacks: Record<
   string,
@@ -49,15 +28,13 @@ export const request = <
   parameters: RpcSchema.ExtractRequest<JsonRpc.Schema, methodName>,
 ): Promise<RpcSchema.ExtractReturnType<JsonRpc.Schema, methodName>> => {
   return new Promise((resolve, reject) => {
-    // @ts-expect-error
-    const request = store.prepare<methodName>(parameters)
-    transport.postMessage(request)
+    const request = store.prepare<methodName>(parameters as never)
 
-    const handleResponse = (response: JsonRpc.Response) => {
+    pendingRequestCallbacks[request.id] = (response: JsonRpc.Response) => {
       try {
         resolve(
           // @ts-expect-error
-          RpcResponse.parse<JsonRpc.Response, unknown, true>(response, {
+          RpcResponse.parse<JsonRpc.Response>(response, {
             request,
           }),
         )
@@ -66,12 +43,15 @@ export const request = <
       }
     }
 
-    pendingRequestCallbacks[request.id] = handleResponse
+    transport.postMessage({
+      source: 'farcaster-mini-app-request',
+      payload: request,
+    })
   })
 }
 
-function listener(ev: MessageEvent) {
-  if (!ev || !ev.data || typeof ev.data === 'string') {
+function listener(ev: Event) {
+  if (!(ev instanceof MessageEvent) || typeof ev.data === 'string') {
     return
   }
 
@@ -79,43 +59,45 @@ function listener(ev: MessageEvent) {
   // // TODO: runtime type check for event types
 
   if (ev.data.source) {
-    if (ev.data.source === 'farcaster-mini-app-response') {
-      const response = ev.data.payload as JsonRpc.Response
-      console.log('received frame host response: ', response)
+    const message = ev.data as MessageChannel.HostMessage
+    if (message.source === 'farcaster-host-response') {
+      console.log('received frame host response: ', message.payload)
+      const response = message.payload
 
       const callback = pendingRequestCallbacks[response.id]
       if (callback) {
         delete pendingRequestCallbacks[response.id]
-        return callback(response)
+        return callback(response as never)
       }
     }
 
-    if (ev.data.source === 'farcaster-mini-app-host-event') {
-      const frameEvent = ev.data.payload as FrameClientEvent
-      console.log('received frame host event: ', frameEvent)
-      if (frameEvent.event === 'primary_button_clicked') {
-        emitter.emit('primaryButtonClicked')
-      } else if (frameEvent.event === 'frame_added') {
-        emitter.emit('frameAdded', {
-          notificationDetails: frameEvent.notificationDetails,
+    if (message.source === 'farcaster-host-event') {
+      console.log('received frame host event: ', message.payload)
+      const payload = message.payload
+
+      if (payload.event === 'eip6963:announceProvider') {
+        announceProvider({
+          info: payload.info,
+          provider: EthProvider.provider as EIP1193Provider,
         })
-      } else if (frameEvent.event === 'frame_add_rejected') {
-        emitter.emit('frameAddRejected', { reason: frameEvent.reason })
-      } else if (frameEvent.event === 'frame_removed') {
-        emitter.emit('frameRemoved')
-      } else if (frameEvent.event === 'notifications_enabled') {
-        emitter.emit('notificationsEnabled', {
-          notificationDetails: frameEvent.notificationDetails,
-        })
-      } else if (frameEvent.event === 'notifications_disabled') {
-        emitter.emit('notificationsDisabled')
+        return
       }
+
+      const { event, ...data } = payload
+      emitter.emit(event, data as never)
+      return
+    }
+
+    if (message.source === 'farcaster-eth-provider-event') {
+      console.log('received eth provider event: ', message.payload)
+      const event = message.payload
+      emitter.emit(event.event as never, ...(event.params as never))
+      return
     }
   }
 }
 
-// @ts-expect-error
-transport.addEventListener('', listener)
+transport.addEventListener('message', listener)
 
 export const sdk: FrameSDK = {
   ...emitter,
@@ -164,6 +146,6 @@ export const sdk: FrameSDK = {
     },
   },
   wallet: {
-    ethProvider: provider,
+    ethProvider: EthProvider.provider,
   },
 }

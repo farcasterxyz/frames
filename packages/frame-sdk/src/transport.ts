@@ -1,6 +1,6 @@
-import { type Transport, Util } from '@farcaster/frame-core'
+import { type MessageChannel, Util } from '@farcaster/frame-core'
 
-const mockEndpoint: Transport.Endpoint = {
+const mockEndpoint: MessageChannel.MessageChannel = {
   postMessage() {
     // noop
   },
@@ -16,7 +16,7 @@ function isWebview(window: Window) {
   return !!window.ReactNativeWebView && window.top === window
 }
 
-export function webviewTransport(): Transport.Endpoint {
+export function webviewTransport(): MessageChannel.MessageChannel {
   return {
     postMessage: (message: unknown) => {
       window.ReactNativeWebView.postMessage(Util.stringify(message))
@@ -32,16 +32,10 @@ export function webviewTransport(): Transport.Endpoint {
 
 export function iframeTransport(
   options: Partial<{ targetOrigin: string }> = {},
-): Transport.Endpoint {
+): MessageChannel.MessageChannel {
   return {
-    postMessage: (payload: unknown) => {
-      window.parent.postMessage(
-        {
-          source: 'farcaster-mini-app-request',
-          payload,
-        },
-        options.targetOrigin ?? '*',
-      )
+    postMessage: (message: unknown) => {
+      window.parent.postMessage(message, options.targetOrigin ?? '*')
     },
     addEventListener: (_, listener, ...args) => {
       window.addEventListener('message', listener, ...args)

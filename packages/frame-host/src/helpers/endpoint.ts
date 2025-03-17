@@ -1,21 +1,32 @@
-import { Util, type FrameHost, type JsonRpc } from '@farcaster/frame-core'
-import type { Provider, RpcRequest, RpcResponse } from 'ox'
+import {
+  type FrameHost,
+  type JsonRpc,
+  type Provider,
+  Util,
+} from '@farcaster/frame-core'
+import { type Provider as EthProvider, RpcResponse } from 'ox'
 import { useEffect } from 'react'
 import * as Comlink from '../comlink'
 import type { HostEndpoint } from '../types'
 import { wrapProviderRequest } from './provider'
 import { wrapHandlers } from './sdk'
 
-export function listenToEndpoint({
+const farcasterHostEventTypes = [
+  'frameAdded',
+  'frameAddRejected',
+  'frameRemoved',
+  'notificationsEnabled',
+  'notificationsDisabled',
+] as const
+
+export function exposeProvider({
   endpoint,
   frameOrigin,
-  handleRequest,
+  frameProvider,
 }: {
   endpoint: HostEndpoint
   frameOrigin: string
-  handleRequest: (
-    request: RpcRequest.RpcRequest,
-  ) => Promise<RpcResponse.RpcResponse>
+  frameProvider: Provider.Provider
 }) {
   async function listener(ev: MessageEvent) {
     if (!ev || !ev.data) {
@@ -28,17 +39,64 @@ export function listenToEndpoint({
 
     // TODO better runtime checks, share
     if (ev.data.source && ev.data.source === 'farcaster-mini-app-request') {
+      const request = ev.data.payload as JsonRpc.Request
+
+      const result = await (async () => {
+        try {
+          const result = await frameProvider.request(request)
+
+          return {
+            id: request.id,
+            jsonrpc: request.jsonrpc,
+            result,
+          }
+        } catch (e) {
+          if (e instanceof RpcResponse.BaseError) {
+            return {
+              id: request.id,
+              jsonrpc: request.jsonrpc,
+              error: {
+                code: e.code,
+                message: e.message,
+                data: e.data,
+              },
+            }
+          }
+        }
+      })()
+
       endpoint.postMessage({
-        source: 'farcaster-mini-app-response',
-        payload: await handleRequest(ev.data.payload as JsonRpc.Request),
+        source: 'farcaster-host-response',
+        payload: result,
       })
     }
   }
 
   window.addEventListener('message', listener)
 
+  const removeListeners = farcasterHostEventTypes.map((type) => {
+    function handleEvent(event: any) {
+      endpoint.postMessage({
+        source: 'farcaster-host-event',
+        payload: {
+          type,
+          ...event,
+        },
+      })
+    }
+
+    frameProvider.on(type, handleEvent)
+
+    return () => {
+      frameProvider.removeListener(type, handleEvent)
+    }
+  })
+
   return () => {
     window.removeEventListener('message', listener)
+    for (const removeListener of removeListeners) {
+      removeListener()
+    }
   }
 }
 
@@ -55,7 +113,7 @@ export function exposeToEndpoint({
   endpoint: HostEndpoint
   sdk: Omit<FrameHost, 'ethProviderRequestV2'>
   frameOrigin: string
-  ethProvider?: Provider.Provider
+  ethProvider?: EthProvider.Provider
   debug?: boolean
 }) {
   const extendedSdk = wrapHandlers(sdk as FrameHost)
@@ -80,7 +138,7 @@ export function useExposeToEndpoint({
   endpoint: HostEndpoint | undefined
   sdk: Omit<FrameHost, 'ethProviderRequestV2'>
   frameOrigin: string
-  ethProvider?: Provider.Provider
+  ethProvider?: EthProvider.Provider
   debug?: boolean
 }) {
   useEffect(() => {
