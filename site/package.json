@@ -8,13 +8,13 @@
     "preview": "vocs preview"
   },
   "dependencies": {
+    "@farcaster/frame-core": "workspace:*",
+    "@farcaster/frame-sdk": "workspace:*",
     "react": "latest",
     "react-dom": "latest",
     "vocs": "latest"
   },
   "devDependencies": {
-    "@farcaster/frame-core": "workspace:*",
-    "@farcaster/frame-sdk": "workspace:*",
     "@types/react": "latest",
     "typescript": "latest"
   }
