@@ -1,16 +1,18 @@
 import { defineConfig } from 'vocs'
 
+const PRODUCTION_URL = 'https://deodad-frames.vercel.app'
+
 export default defineConfig({
-  baseUrl: process.env.VERCEL_URL ?? 'https://deodad-frame.vercel.app',
+  baseUrl: process.env.VERCEL_URL ?? PRODUCTION_URL,
   rootDir: '.',
   title: 'Farcaster Mini Apps',
   titleTemplate: '%s · Farcaster Mini Apps',
   logoUrl: {
-    light: '/logo-light.svg',
-    dark: '/logo-dark.svg',
+    light: `${PRODUCTION_URL}/logo-light.svg`,
+    dark: `${PRODUCTION_URL}/logo-dark.svg`,
   },
   ogImageUrl:
-    'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
+    'https://og-five-theta.vercel.app/api/og?logo=%logo&title=%title&description=%description',
   theme: {
     accentColor: '#8a63d2',
   },
