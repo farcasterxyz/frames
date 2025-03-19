@@ -12,7 +12,7 @@ export default defineConfig({
     dark: '/logo-dark.svg',
   },
   ogImageUrl:
-    'https://og-five-eta.vercel.app/api/og?logo=%logo&title=%title&description=%description',
+    'https://og-five-eta.vercel.app/api/og?logo=https://%logo&title=%title&description=%description',
   theme: {
     accentColor: '#8a63d2',
   },
