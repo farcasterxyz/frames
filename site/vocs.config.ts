@@ -15,7 +15,6 @@ export default defineConfig({
     accentColor: '#8a63d2',
   },
   topNav: [
-    { text: 'Docs', link: '/docs/getting-started', match: '/' },
     {
       text: 'Examples',
       link: 'https://github.com/farcasterxyz/frames/tree/main/examples',
@@ -23,7 +22,7 @@ export default defineConfig({
     { text: 'Rewards', link: 'https://warpcast.com/~/developers/rewards' },
   ],
   sidebar: {
-    '/docs': [
+    '/': [
       {
         text: 'Introduction',
         items: [
