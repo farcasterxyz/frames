@@ -9,7 +9,7 @@ export default defineConfig({
     light: '/logo-light.svg',
     dark: '/logo-dark.svg',
   },
-  ogImageUrl: `${process.env.VERCEL_URL}/api/og?logo=%logo&title=%title&description=%description`,
+  ogImageUrl: `https://deodad-frames.vercel.app/api/og?logo=%logo&title=%title&description=%description`,
   theme: {
     accentColor: '#8a63d2',
   },
@@ -28,7 +28,7 @@ export default defineConfig({
         items: [
           {
             text: 'Why Frames?',
-            link: '/docs',
+            link: '/',
           },
           {
             text: 'Getting Started',
