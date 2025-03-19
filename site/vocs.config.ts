@@ -1,7 +1,7 @@
 import { defineConfig } from 'vocs'
 
 export default defineConfig({
-  baseUrl: process.env.VERCEL_URL,
+  baseUrl: process.env.VERCEL_URL ?? 'https://deodad-frame.vercel.app',
   rootDir: '.',
   title: 'Farcaster Mini Apps',
   titleTemplate: '%s · Farcaster Mini Apps',
@@ -9,12 +9,13 @@ export default defineConfig({
     light: '/logo-light.svg',
     dark: '/logo-dark.svg',
   },
-  ogImageUrl: `https://deodad-frames.vercel.app/api/og?logo=%logo&title=%title&description=%description`,
+  ogImageUrl:
+    'https://vocs.dev/api/og?logo=%logo&title=%title&description=%description',
   theme: {
     accentColor: '#8a63d2',
   },
   topNav: [
-    { text: 'Docs', link: '/docs', match: '/docs' },
+    { text: 'Docs', link: '/docs/getting-started', match: '/' },
     {
       text: 'Examples',
       link: 'https://github.com/farcasterxyz/frames/tree/main/examples',
@@ -27,7 +28,7 @@ export default defineConfig({
         text: 'Introduction',
         items: [
           {
-            text: 'Why Frames?',
+            text: 'Why Mini Apps?',
             link: '/',
           },
           {
