@@ -1,0 +1,35 @@
+---
+title: viewProfile
+description: Displays a user's Farcaster profile.
+---
+
+# viewProfile
+
+Displays a user's Farcaster profile. 
+
+## Usage
+
+```ts twoslash
+const fid = 6841;
+
+// ---cut---
+import { sdk } from '@farcaster/frame-sdk'
+
+await sdk.actions.viewProfile({ 
+  fid
+})
+```
+
+## Parameters
+
+### fid
+
+- **Type:** `number`
+
+Farcaster ID of the user who's profile to view.
+
+## Return Value
+
+`void`
+
+

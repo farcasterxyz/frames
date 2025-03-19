@@ -3,7 +3,16 @@ import { defineConfig } from 'vocs'
 export default defineConfig({
   baseUrl: process.env.VERCEL_URL,
   rootDir: '.',
-  title: 'Farcaster Frames',
+  title: 'Farcaster Mini Apps',
+  titleTemplate: '%s · Farcaster Mini Apps',
+  logoUrl: {
+    light: '/logo-light.svg',
+    dark: '/logo-dark.svg',
+  },
+  ogImageUrl: `${process.env.VERCEL_URL}/api/og?logo=%logo&title=%title&description=%description`,
+  theme: {
+    accentColor: '#8a63d2',
+  },
   topNav: [
     { text: 'Docs', link: '/docs', match: '/docs' },
     {
@@ -31,11 +40,11 @@ export default defineConfig({
         text: 'Guides',
         items: [
           {
-            text: 'Manifest',
+            text: 'Publishing your app',
             link: '/docs/manifest',
           },
           {
-            text: 'Embeds',
+            text: 'Sharing your app',
             link: '/docs/embeds',
           },
           {
@@ -92,6 +101,7 @@ export default defineConfig({
       },
       {
         text: 'Reference',
+        collapsed: true,
         items: [
           {
             text: 'Specification',
@@ -105,4 +115,14 @@ export default defineConfig({
       },
     ],
   },
+  socials: [
+    {
+      icon: 'github',
+      link: 'https://github.com/farcasterxyz/frames',
+    },
+    {
+      icon: 'x',
+      link: 'https://x.com/farcaster_xyz',
+    },
+  ],
 })

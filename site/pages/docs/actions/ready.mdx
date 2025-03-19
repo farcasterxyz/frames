@@ -1,0 +1,36 @@
+---
+title: ready
+description: Hides the Splash Screen.
+---
+
+# ready
+
+Hides the Splash Screen.
+
+## Best Practices
+
+Deliver a smooth UX by waiting until your interface is fully rendered before
+calling ready. This avoids content jumps.
+
+## Usage
+
+```ts twoslash
+import { sdk } from '@farcaster/frame-sdk'
+
+await sdk.actions.ready()
+```
+
+## Parameters
+
+### disableNativeGestures (optional)
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+Disable native gestures. Use this option if your frame uses gestures
+that conflict with native gestures like swipe to dismiss.
+
+## Return Value
+
+`void`
+

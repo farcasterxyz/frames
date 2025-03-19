@@ -1,0 +1,40 @@
+---
+title: signIn
+description: Sign in the user with Farcaster.
+---
+
+# signIn
+
+Sign in the user with Farcaster.
+
+## Usage
+
+```ts twoslash
+/**
+ * Cryptographically secure nonce generated on the server and associated with
+ * the user's session.
+ */ 
+const nonce = 'securenonce';
+
+// ---cut---
+import { sdk } from '@farcaster/frame-sdk'
+
+await sdk.actions.signIn({ 
+  nonce 
+})
+```
+
+## Parameters
+
+### nonce
+
+- **Type:** `string`
+
+A random string used to prevent replay attacks, at least 8 alphanumeric
+characters.
+
+TODO: expand on nonce
+
+## Return Value
+
+TODO
