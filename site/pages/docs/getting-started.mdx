@@ -2,18 +2,18 @@
 
 ## Overview
 
-Frames are web apps built with HTML, CSS, and JavaScript that use the Frames
-SDK to integrate natively within a Farcaster client.
+Mini Apps are web apps built with HTML, CSS, and JavaScript that natively
+integrate with Farcaster clients using an SDK.
 
-You can use your favorite web framework for developing a Frame. 
-
-
-In this guide we'll use [Vite](https://vitejs.dev) and
-[React](https://react.dev).
+To get started, use your favorite web framework (or just plain HTML and
+JavaScript) to setup a basic web application. If you aren't sure which one to
+use we recommend
+[Vite](https://vite.dev/guide/#scaffolding-your-first-vite-project). 
 
 ## Installation
 
 Install the Frames SDK into your project.
+
 
 ### Package Manager
 
@@ -45,7 +45,7 @@ the bottom of your HTML file with the following content.
 </script>
 ```
 
-## Calling ready
+## Calling Ready
 
 When a user launches a frame, a splash screen is shown (more on this later) to
 the user until the application signals that it's ready to be shown to the user:
@@ -57,10 +57,10 @@ import { sdk } from '@farcaster/frame-sdk'
 await sdk.actions.ready();
 ```
 
-## Previewing your frame
+## Previewing Your Mini App
 
-There is a lot you can do to make an engaging social application but this is
-minimum you need to do to turn your application into a frame.
+There is a lot you can do to make an engaging application but this is minimum
+you need to do to turn your web application into a frame.
 
 Let's preview it in Warpcast:
 
@@ -69,7 +69,7 @@ Let's preview it in Warpcast:
 3. Hit _Preview_
 
 
-## Verifying your frame
+## Verifying your Mini App
 
 TODO
 
