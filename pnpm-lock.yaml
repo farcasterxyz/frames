@@ -269,6 +269,12 @@ importers:
 
   site:
     dependencies:
+      '@farcaster/frame-core':
+        specifier: workspace:*
+        version: link:../packages/frame-core
+      '@farcaster/frame-sdk':
+        specifier: workspace:*
+        version: link:../packages/frame-sdk
       react:
         specifier: latest
         version: 19.0.0
@@ -279,12 +285,6 @@ importers:
         specifier: latest
         version: 1.0.8(@types/node@22.10.2)(@types/react-dom@19.0.4(@types/react@19.0.11))(@types/react@19.0.11)(acorn@8.14.0)(jiti@2.4.2)(lightningcss@1.29.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.34.8)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
     devDependencies:
-      '@farcaster/frame-core':
-        specifier: workspace:*
-        version: link:../packages/frame-core
-      '@farcaster/frame-sdk':
-        specifier: workspace:*
-        version: link:../packages/frame-sdk
       '@types/react':
         specifier: latest
         version: 19.0.11

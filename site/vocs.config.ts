@@ -8,8 +8,8 @@ export default defineConfig({
   title: 'Farcaster Mini Apps',
   titleTemplate: '%s · Farcaster Mini Apps',
   logoUrl: {
-    light: `${PRODUCTION_URL}/logo-light.svg`,
-    dark: `${PRODUCTION_URL}/logo-dark.svg`,
+    light: `/logo-light.svg`,
+    dark: `/logo-dark.svg`,
   },
   ogImageUrl:
     'https://og-five-theta.vercel.app/api/og?logo=%logo&title=%title&description=%description',
