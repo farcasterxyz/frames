@@ -43,23 +43,23 @@ export default defineConfig({
         items: [
           {
             text: 'Publishing your app',
-            link: '/docs/publishing',
+            link: '/docs/guides/publishing',
           },
           {
             text: 'Sharing your app',
-            link: '/docs/embeds',
+            link: '/docs/guides/sharing',
           },
           {
             text: 'Interacting with wallets',
-            link: '/docs/embeds',
+            link: '/docs/guides/wallets',
           },
           {
             text: 'Sending notifications',
-            link: '/docs/notifications',
+            link: '/docs/guides/notifications',
           },
           {
             text: 'Authenticating users',
-            link: '/docs/embeds',
+            link: '/docs/guides/embeds',
           },
         ],
       },

@@ -10,9 +10,11 @@
   "dependencies": {
     "@farcaster/frame-core": "workspace:*",
     "@farcaster/frame-sdk": "workspace:*",
+    "@farcaster/frame-wagmi-connector": "workspace:*",
     "react": "latest",
     "react-dom": "latest",
-    "vocs": "latest"
+    "vocs": "latest",
+    "wagmi": "^2.14.12"
   },
   "devDependencies": {
     "@types/react": "latest",

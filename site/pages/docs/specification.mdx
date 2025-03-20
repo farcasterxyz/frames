@@ -1,5 +1,6 @@
 ---
-title: Farcaster Frames Specification
+title: Specification
+description: Specification for Farcaster Mini Apps
 ---
 
 # Specification
@@ -92,13 +93,26 @@ The manifest file declares the metadata that is applied to the frame application
 
 Frame should provide a JSON manifest file on their domain at the well known URI `/.well-known/farcaster.json`.
 
-```ts twoslash
-import { Manifest } from "@farcaster/frame-core";
+```ts
+type FarcasterManifest = {
+  // Metadata associating the domain with a Farcaster account
+  accountAssociation: {
+    // base64url encoded JFS header.
+    // See FIP: JSON Farcaster Signatures for details on this format.
+    header: string;
 
-// ---cut---
-type Manifest = {
-  accountAssociation: Manifest.AccountAssociation
-  frame: Manifest.FrameConfig;
+    // base64url encoded payload containing a single property `domain`
+    payload: string;
+
+    // base64url encoded signature bytes
+    signature: string;
+  };
+
+  // Frame configuration
+  frame: FrameConfig;
+
+  // Trigger configuration
+  triggers?: TriggerConfig[];
 };
 ```
 
@@ -118,88 +132,53 @@ The domain in the signed object must match the domain the manifest is served fro
 **Frame Config**
 
 ```ts
-/**
- * Frame configuration
- *
- * @example
- * ``ts
- * const frame: FrameConfig = {
- *   version: '1',
- *   name: 'Yoink!',
- *   homeUrl: 'https://yoink.party',
- *   iconUrl: 'https://yoink.party/img/icon.png',
- *   imageUrl: 'https://yoink.party/framesV2/opengraph-image',
- *   buttonTitle: '🚩 Start',
- *   splashImageUrl: 'https://yoink.party/img/splash.png',
- *   splashImageBackgroundColor: '#eeeee4',
- *   webhookUrl: 'https://yoink.party/webhook'
- * };
- * ``
- */
-export type FrameConfig = {
-  /**
-   * Manifest version
-   *
-   * Must be the literal '1'.
-   */
-  version: '1'
+type FrameConfig = {
+  // Manifest version. Required.
+  version: '1';
 
-  /**
-   * App name that will be displayed to users
-   *
-   * Max length of 32 characters.
-   */
-  name: string
+  // App name. Required.
+  // Max length of 32 characters.
+  // Example: "Yoink!"
+  name: string;
 
-  /**
-   * Default launch URL
-   *
-   * Max length of 512 characters.
-   */
-  homeUrl: string
+  // Default launch URL. Required.
+  // Max 512 characters.
+  // Example: "https://yoink.party/"
+  homeUrl: string;
 
-  /**
-   * Icon URL
-   *
-   * Max length of 512 characters. Image must be 200x200px and less than 1MB.
-   */
-  iconUrl: string
+  // Frame application icon URL.
+  // Max 512 characters.
+  // Image must be 200x200px and less than 1MB.
+  // Example: "https://yoink.party/img/icon.png"
+  iconUrl: string;
 
-  /**
-   * Image URL
-   *
-   * Max length of 512 characters. Image must have a 3:2 ratio.
-   */
-  imageUrl: string
+  // Default image to show when frame is rendered in a feed.
+  // Max 512 characters.
+  // Image must have a 3:2 ratio.
+  // Example: "https://yoink.party/framesV2/opengraph-image"
+  imageUrl: string;
 
-  /**
-   * Default button title to use when frame is rendered.
-   *
-   * Max length of 32 characters.
-   */
-  buttonTitle: string
+  // Default button title to use when frame is rendered in a feed.
+  // Max 32 characters.
+  // Example: "🚩 Start"
+  buttonTitle: string;
 
-  /**
-   * Splash image URL
-   *
-   * Max length of 512 characters. Image must be 200x200px and less than 1MB.
-   */
-  splashImageUrl?: string
+  // Splash image URL.
+  // Max 512 characters.
+  // Image must be 200x200px and less than 1MB.
+  // Example: "https://yoink.party/img/splash.png"
+  splashImageUrl?: string;
 
-  /**
-   * Splash background color
-   *
-   * Must be a hex color code.
-   */
-  splashBackgroundColor?: string
+  // Hex color code.
+  // Example: "#eeeee4"
+  splashBackgroundColor?: string;
 
-  /**
-   * URL to which clients will POST server events.
-   * Max 512 characters.
-   * Required if the frame application uses notifications.
-   */
-  webhookUrl?: string
-}
+  // URL to which clients will POST events.
+  // Max 512 characters.
+  // Required if the frame application uses notifications.
+  // Example: "https://yoink.party/webhook"
+  webhookUrl?: string;
+};
 ```
 
 **Frame Invocation**

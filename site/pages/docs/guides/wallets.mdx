@@ -1,0 +1,132 @@
+---
+title: Interacting with Wallets
+description: Seamlessly interact with a user's crypto wallet
+---
+
+# Interacting with Wallets
+
+Mini Apps can interact with a user's crypto wallet without need to worry about
+popping open "select your wallet" dialogs or flakey connections.
+
+## Getting Started
+
+The Mini App SDK exposes an [EIP-1193 Ethereum Provider
+API](https://eips.ethereum.org/EIPS/eip-1193) at `sdk.wallet.ethProvider`.
+
+We recommend using [Wagmi](https://wagmi.sh) to connect to and interact with
+the users wallet. This is not required but provides high-level hooks for
+interacting with the wallet in a type-safe way.
+
+::::steps
+### Setup Wagmi
+
+Use the [Getting Started
+guide](https://wagmi.sh/react/getting-started#manual-installation) to setup
+Wagmi in your project.
+
+### Install the connector
+
+Next we'll install a Wagmi connector that will be used to interact with the
+user's wallet:
+
+:::code-group
+
+```bash [npm]
+npm install @farcaster/frame-wagmi-connector
+```
+
+```bash [pnpm]
+pnpm add @farcaster/frame-wagmi-connector
+```
+
+```bash [yarn]
+yarn add @farcaster/frame-wagmi-connector
+```
+
+:::
+
+### Add to Wagmi configuration
+
+Add the Mini App connector to your Wagmi config:
+
+```ts
+import { http, createConfig } from 'wagmi'
+import { base } from 'wagmi/chains'
+import { farcasterFrame as miniAppConnector } from '@farcaster/frame-wagmi-connector'
+
+export const config = createConfig({
+  chains: [base],
+  transports: {
+    [base.id]: http(),
+  },
+  connectors: [
+    miniAppConnector()
+  ]
+})
+```
+
+### Connect to the wallet
+
+If a user already has a connected wallet the connector will automatically
+connect to it (e.g. `isConnected` will be true). 
+
+It's possible a user doesn't have a connected wallet so you should always check
+for a connection and prompt them to connect if they aren't already connected:
+
+```tsx 
+import { useAccount, useConnect } from 'wagmi'
+
+function ConnectMenu() {
+  const { isConnected, address } = useAccount()
+  const { connect, connectors } = useConnect()
+
+  if (isConnected) {
+    return (
+      <>
+        <div>You're connected!
+        <div>Address: {address}</div>
+      </>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => connect({ connector: connectors[0] })}
+    >
+      Connect
+    </button>
+  )
+}
+```
+
+:::note
+Your Mini App won't need to show a wallet selection dialog that is common in a
+web based dapp, the Farcaster client hosting your app will take care of getting
+the user connected to their preferred crypto wallet.
+:::
+
+
+### Send a transaction
+
+You're now ready to prompt the user to transact. They will be shown a preview
+of the transaction in their wallet and asked to confirm it:
+
+< screen shot >
+
+Follow [this guide from
+Wagmi](https://wagmi.sh/react/guides/send-transaction#_2-create-a-new-component)
+on sending a transaction (note: skip step 1 since you're already connected to
+the user's wallet).
+
+::::
+
+
+## Troubleshooting
+
+### Transaction Scanning
+
+Modern crypto wallets scan transactions and preview them to users to help
+protect users from scams. New contracts and applications can generate false
+positives in these systems. If your transaction is being reported as
+potentially malicious use this [Blockaid report tool
