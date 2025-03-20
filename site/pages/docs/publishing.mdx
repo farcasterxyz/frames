@@ -1,0 +1,92 @@
+---
+title: Publishing
+description: Guide to publishing Farcaster Mini Apps.
+---
+
+# Publishing your app
+
+Publishing Mini Apps involves providing information like who developed the app,
+how it should be displayed, and what its capabilities are.
+
+Since Farcaster is a decentralized network with multiple clients, publishing is
+done by hosting a file at `/.well-known/farcaster.json` on the domain your app
+is hosted on rather than submitting information directly to single entity.
+
+
+## Choosing a domain
+
+A Mini App is associated with a single domain (i.e. rewards.warpcast.com). This
+domain serves as the identifier for your app and can't be changed later so
+you'll want to choose a stable domain. There's no limit on the number of apps
+you can create, so you can optionally use a separate domain for development.
+
+:::note
+A domain does not include the scheme (e.g. https) or path. It can optionally
+include a subdomain.
+- ✅ rewards.warpcast.com
+- ❌ https://rewards.warpcast.com
+:::
+
+:::warning
+TODO Add an an advanced section discussing the nuances of choosing a domain for an
+app.
+:::
+
+## Verifying ownership
+
+A Mini App is owned by a single Farcaster account. This lets users know who
+they are interacting with and developers get credit for their work.
+
+Verification is done by placing a cryptographically signed message in your
+`farcaster.json` file that associates the domain with a Farcaster account. 
+
+We'll generate this verification below.
+
+
+## App Profile 
+
+A Mini App has metadata that is used by Farcaster clients to host your apps.
+This data is also provided in `farcaster.json`.
+
+
+## Generating `farcaster.json`
+
+You can generate both the verification and profile compoents of this file
+including the signature using the [Warpcast Farcaster JSON
+Tool](https://warpcast.com/~/developers/domains). 
+
+:::note
+This tool is only supported on mobile. 
+:::
+
+Take the generated file and host it on your domain at
+`/.well-known/farcaster.json`.
+
+:::warning
+The domain you host the file on must exactly match the domain you entered in
+the Warpcast tool.
+:::
+
+Verify your Mini App using this tool:
+
+TODO
+
+TODO include snippet / full reference
+
+## Summary
+
+In a nutshell, Mini Apps:
+- are web apps
+- are idenitified by the domain they are hosted on
+- are owned by a single Farcaster Account 
+- are published by hosting a `/.well-known/farcaster.json` file
+
+## Next Steps
+
+Congratulations—your Mini App is now published! Next we'll cover how to make
+your app sharable in feeds.
+
+TODO
+- clean up the domains tool on mobile
+- add a placeholder on web
+- preview / published flag in manifest

@@ -43,12 +43,29 @@ export default defineConfig({
         items: [
           {
             text: 'Publishing your app',
-            link: '/docs/manifest',
+            link: '/docs/publishing',
           },
           {
             text: 'Sharing your app',
             link: '/docs/embeds',
           },
+          {
+            text: 'Interacting with wallets',
+            link: '/docs/embeds',
+          },
+          {
+            text: 'Sending notifications',
+            link: '/docs/notifications',
+          },
+          {
+            text: 'Authenticating users',
+            link: '/docs/embeds',
+          },
+        ],
+      },
+      {
+        text: 'API',
+        items: [
           {
             text: 'Context',
             link: '/docs/context',
@@ -58,46 +75,38 @@ export default defineConfig({
             link: '/docs/wallet',
           },
           {
-            text: 'Auth',
-            link: '/docs/auth',
-          },
-          {
-            text: 'Notifications',
-            link: '/docs/notifications',
+            text: 'Actions',
+            collapsed: true,
+            items: [
+              {
+                text: 'ready',
+                link: '/docs/actions/ready',
+              },
+              {
+                text: 'addFrame',
+                link: '/docs/actions/add-frame',
+              },
+              {
+                text: 'signIn',
+                link: '/docs/actions/sign-in',
+              },
+              {
+                text: 'openUrl',
+                link: '/docs/actions/open-url',
+              },
+              {
+                text: 'viewProfile',
+                link: '/docs/actions/view-profile',
+              },
+              {
+                text: 'close',
+                link: '/docs/actions/close',
+              },
+            ],
           },
           {
             text: 'Events',
             link: '/docs/events',
-          },
-        ],
-      },
-      {
-        text: 'Actions',
-        collapsed: true,
-        items: [
-          {
-            text: 'ready',
-            link: '/docs/actions/ready',
-          },
-          {
-            text: 'addFrame',
-            link: '/docs/actions/add-frame',
-          },
-          {
-            text: 'signIn',
-            link: '/docs/actions/sign-in',
-          },
-          {
-            text: 'openUrl',
-            link: '/docs/actions/open-url',
-          },
-          {
-            text: 'viewProfile',
-            link: '/docs/actions/view-profile',
-          },
-          {
-            text: 'close',
-            link: '/docs/actions/close',
           },
         ],
       },
