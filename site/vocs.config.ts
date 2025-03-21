@@ -4,9 +4,16 @@ const PRODUCTION_URL = 'https://deodad-frames.vercel.app'
 
 export default defineConfig({
   baseUrl: process.env.VERCEL_URL ?? PRODUCTION_URL,
+  font: {
+    google: 'Inter',
+  },
   rootDir: '.',
   title: 'Farcaster Mini Apps',
   titleTemplate: '%s · Farcaster Mini Apps',
+  // editLink: {
+  //   pattern: 'https://github.com/farcasterxyz/frames/edit/main/site/pages/:path',
+  //   text: 'Edit on GitHub'
+  // },
   logoUrl: {
     light: '/logo-light.svg',
     dark: '/logo-dark.svg',
