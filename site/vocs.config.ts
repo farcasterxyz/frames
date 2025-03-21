@@ -36,6 +36,10 @@ export default defineConfig({
             text: 'Getting Started',
             link: '/docs/getting-started',
           },
+          {
+            text: 'LLMs',
+            link: '/docs/llms',
+          },
         ],
       },
       {
