@@ -70,7 +70,7 @@ export default defineConfig({
           },
           {
             text: 'Authenticating users',
-            link: '/docs/guides/embeds',
+            link: '/docs/guides/auth',
           },
         ],
       },
