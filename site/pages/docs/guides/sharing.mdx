@@ -4,6 +4,141 @@ description: Make your app sharable in social feeds
 section_title: Guide
 ---
 
+import { Caption } from '../../../components/Caption';
+
 # Sharing your app
 
-TODO
+Mini Apps can be shared in social feeds using special embeds called Frames that
+let users interact with an app directly from their feed.
+
+Each URL in your application can be turned into a Frame by adding meta tags to
+it that specify an image and action, similar to how Open Graph tags work.
+
+For example:
+- a personality quiz app can let users share a personalized Frame with their results
+- an NFT marketplace can let users share a Frame for each listing
+- a prediction market app can let users share a Frame for each market
+
+![sharing an app in a social feed with a Frame](/share_frame_preview.png)
+
+<Caption>
+  An in-app notification is sent to a user and launches them into the app
+</Caption>
+
+## Making a page sharable
+
+Add a special meta tag in the `<head>` section of the page you want to make
+sharable specifying the Frame metadata:
+
+```html
+<meta name="fc:frame" content="<stringified FrameEmbed JSON>" />
+```
+
+```ts
+type FrameEmbed = {
+  // Frame spec version. Required.
+  // Example: "next"
+  version: 'next';
+
+  // Frame image.
+  // Max 512 characters.
+  // Image must be 3:2 aspect ratio and less than 10 MB.
+  // Example: "https://yoink.party/img/start.png"
+  imageUrl: string;
+
+  // Button attributes
+  button: {
+    // Button text.
+    // Max length of 32 characters.
+    // Example: "Yoink Flag"
+    title: string;
+
+    // Action attributes
+    action: {
+      // Action type. Must be "launch_frame".
+      type: 'launch_frame';
+
+      // App name
+      // Max length of 32 characters.
+      // Example: "Yoink!"
+      name: string;
+
+      // Frame launch URL.
+      // Max 512 characters.
+      // Example: "https://yoink.party/"
+      url: string;
+
+      // Splash image URL.
+      // Max 512 characters.
+      // Image must be 200x200px and less than 1MB.
+      // Example: "https://yoink.party/img/splash.png"
+      splashImageUrl: string;
+
+      // Hex color code.
+      // Example: "#eeeee4"
+      splashBackgroundColor: string;
+    };
+  };
+};
+```
+
+You can use the [Warpcast Frame Debug Tool] to preview your Frame.
+
+When a user shares the URL with your Frame on it in a Farcaster client, the
+Farcaster client will fetch the HTML, see the `fc:frame` meta tag, and use it
+to render a rich card.
+
+
+## Caching
+
+Since Frames are shared feeds, they are generally scraped once and cached so
+that they can be efficiently served in the feeds of hundreds or thousands
+users.
+
+This means that when a URL gets shared, the Frame data present at that time
+will be attached to the cast and won't be updated even if the Frame data at
+that URL gets changed.
+
+TODO add link to metadata cache busting tool
+
+
+## Advanced Topics 
+
+### Dynamic Frame images
+
+Even though the Frame data attached to a specific cast is static, a dynamic
+image can be served using tools like Next.js
+[Next ImageResponse](https://nextjs.org/docs/app/api-reference/functions/image-response).
+
+For example, we could create a Frame that shows shows the current price of ETH. We'd
+set the `imageUrl` to a static URL like `https://example.xyz/eth-price.png`. When a request
+is made to this endpoint we'd:
+
+- fetch the latest price of ETH (ideally from a cache)
+- renders an image using a tool like [Vercel
+  OG](https://vercel.com/docs/functions/og-image-generation) and returns it
+- sets the following header: `Cache-Control: public, immutable, no-transform,
+  max-age=300`
+
+#### Setting `max-age`
+
+You should always set a non-zero `max-age` (outside of testing) so that the
+image can get cached and served from CDNs, otherwise users will see a gray
+image in their feed while the dynamic image is generated. You'll also quickly
+rack up a huge bill from your servie provider. The exact time depends on your
+application but opt for the longest time that still keeps the image reasonably
+fresh. If you're needing freshness less than a minute you should reconsider 
+your design or be prepared to operate a high performance endpoint.
+
+Here's some more reading if you're interested in doing this:
+- [Vercel Blog - Fast, dynamic social card images at the Edge](https://vercel.com/blog/introducing-vercel-og-image-generation-fast-dynamic-social-card-images)
+- [Vercel Docs - OG Image Generation](https://vercel.com/docs/og-image-generation)
+
+#### Avoid caching fallback images
+
+If you are generating a dynamic images there's a chance something goes wrong when
+generating the image (for instance, the price of ETH is not available) and you need
+to serve a fallback image. 
+
+In this case you should use an extremely short or even 0 `max-age` to prevent the
+error image from getting stuck in any upstream CDNs.
