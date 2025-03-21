@@ -22,7 +22,7 @@ For example:
 ![sharing an app in a social feed with a Frame](/share_frame_preview.png)
 
 <Caption>
-  A viral loop: users discover apps in feed → use app → share app in feed
+  A viral loop: user discovers app in feed → uses app → shares app in feed
 </Caption>
 
 ## Making a page sharable
@@ -36,53 +36,60 @@ sharable specifying the Frame metadata:
 
 ```ts
 type FrameEmbed = {
-  // Frame spec version. Required.
-  // Example: "next"
+  /** Frame spec version. The literal 'next'. */
   version: 'next';
 
-  // Frame image.
-  // Max 512 characters.
-  // Image must be 3:2 aspect ratio and less than 10 MB.
-  // Example: "https://yoink.party/img/start.png"
+  /** 
+   * Image to display. 
+   * Must be 3:2 aspect ratio and less than 10 MB.
+   * The URL must be <= 512 characters.
+   */
   imageUrl: string;
 
-  // Button attributes
   button: {
-    // Button text.
-    // Max length of 32 characters.
-    // Example: "Yoink Flag"
+    /**
+     * Button text.
+     * Max length of 32 characters.
+     */
     title: string;
 
-    // Action attributes
     action: {
-      // Action type. Must be "launch_frame".
+      /** 
+       * Action type. 
+       * Must be the literal "launch_frame". 
+       */
       type: 'launch_frame';
 
-      // App name
-      // Max length of 32 characters.
-      // Example: "Yoink!"
-      name: string;
-
-      // Frame launch URL.
-      // Max 512 characters.
-      // Example: "https://yoink.party/"
+      /**
+       * URL to open.
+       * Max length of 512 characters.
+       */
       url: string;
 
-      // Splash image URL.
-      // Max 512 characters.
-      // Image must be 200x200px and less than 1MB.
-      // Example: "https://yoink.party/img/splash.png"
+      /**
+       * Name of the app.
+       */
+      name: string;
+
+      /**
+       * Splash image URL.
+       * Image must be 200x200px and less than 1MB.
+       * Max 512 characters.
+       */
       splashImageUrl: string;
 
-      // Hex color code.
-      // Example: "#eeeee4"
+      /**
+       * Hex color code
+       *
+       * @example: "#eeeee4"
+       */
       splashBackgroundColor: string;
     };
   };
 };
 ```
-
-You can use the [Warpcast Frame Debug Tool] to preview your Frame.
+You can use the [Warpcast Frame Debug
+Tool](https://warpcast.com/~/developers/frames) to preview a Frame.
 
 When a user shares the URL with your Frame on it in a Farcaster client, the
 Farcaster client will fetch the HTML, see the `fc:frame` meta tag, and use it
