@@ -1,0 +1,32 @@
+---
+title: addFrame
+description: Prompts the user to add the app
+---
+
+# addFrame
+
+Prompts the user to add the app.
+
+## Usage
+
+```ts twoslash
+import { sdk } from '@farcaster/frame-sdk'
+
+await sdk.actions.addFrame()
+```
+
+## Return Value
+
+`void`
+
+
+## Errors
+
+### `RejectedByUser`
+
+Thrown if a user rejects the request to add the frame.
+
+
+### `InvalidDomainManifestJson`
+
+Thrown an app does not have a valid `farcaster.json`.

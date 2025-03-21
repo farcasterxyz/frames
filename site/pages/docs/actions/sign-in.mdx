@@ -7,6 +7,9 @@ description: Sign in the user with Farcaster.
 
 Sign in the user with Farcaster.
 
+User are signed in using
+[SIWF](https://github.com/farcasterxyz/protocol/discussions/110).
+
 ## Usage
 
 ```ts twoslash
@@ -33,8 +36,17 @@ await sdk.actions.signIn({
 A random string used to prevent replay attacks, at least 8 alphanumeric
 characters.
 
-TODO: expand on nonce
-
 ## Return Value
 
-TODO
+The SIWF message and signature.
+
+```
+type SignInResult = {
+  signature: string;
+  message: string;
+}
+```
+
+This message should be verified using
+[verifySignInMessage](https://docs.farcaster.xyz/aut-kit/client/app/verify-sign-in-message#verifysigninmessage)
+from `@farcaster/auth-kit`.

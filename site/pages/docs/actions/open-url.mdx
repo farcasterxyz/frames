@@ -1,0 +1,27 @@
+---
+title: addFrame
+description: Opens an external URL
+---
+
+# openUrl
+
+Opens an external URL.
+
+If a user is on mobile `openUrl` can be used to deeplink
+users into different parts of the Farcaster client they
+are using.
+
+## Usage
+
+```ts twoslash
+const url = 'https://farcaster.xyz';
+
+//---cut---
+import { sdk } from '@farcaster/frame-sdk'
+
+await sdk.actions.openUrl(url)
+```
+
+## Return Value
+
+`void`

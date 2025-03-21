@@ -15,3 +15,7 @@ export declare namespace BaseError {
     cause?: cause | undefined
   }
 }
+
+export type GlobalErrorType<name extends string = 'Error'> = Error & {
+  name: name
+}
