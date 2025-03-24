@@ -308,7 +308,7 @@ export function expose(
       switch (type) {
         case MessageType.GET:
           if (path[0] === 'context') {
-            returnValue = obj.context;
+            returnValue = obj.context
           } else {
             throw new Error(`Unsupported GET for ${path.join('/')}`)
           }
@@ -317,30 +317,30 @@ export function expose(
           returnValue = (() => {
             switch (path[0]) {
               case 'close':
-                return obj.close();
+                return obj.close()
               case 'ready':
-                return obj.ready(...argumentList);
+                return obj.ready(...argumentList)
               case 'openUrl':
-                return obj.openUrl(...argumentList);
+                return obj.openUrl(...argumentList)
               case 'signIn':
-                return obj.signIn(...argumentList);
+                return obj.signIn(...argumentList)
               case 'setPrimaryButton':
-                return obj.setPrimaryButton(...argumentList);
+                return obj.setPrimaryButton(...argumentList)
               case 'ethProviderRequest':
-                return obj.ethProviderRequest(...argumentList);
+                return obj.ethProviderRequest(...argumentList)
               case 'ethProviderRequestV2':
-                return obj.ethProviderRequestV2(...argumentList);
+                return obj.ethProviderRequestV2(...argumentList)
               case 'eip6963RequestProvider':
-                return obj.eip6963RequestProvider(...argumentList);
+                return obj.eip6963RequestProvider(...argumentList)
               case 'addFrame':
-                return obj.addFrame(...argumentList);
+                return obj.addFrame(...argumentList)
               case 'viewProfile':
-                return obj.viewProfile(...argumentList);
+                return obj.viewProfile(...argumentList)
               default:
                 throw new Error(`Unsupported APPLY for ${path.join('/')}`)
             }
           })()
-          break;
+          break
         }
         case MessageType.SET:
           throw new Error(`Unsupported SET for ${path.join('/')}`)
@@ -508,7 +508,7 @@ function createProxy<T>(
     },
     set(_target) {
       throwIfProxyReleased(isProxyReleased)
-      throw new Error("Unsupported call to set");
+      throw new Error('Unsupported call to set')
     },
     apply(_target, _thisArg, rawArgumentList) {
       throwIfProxyReleased(isProxyReleased)
@@ -535,7 +535,7 @@ function createProxy<T>(
       ).then(fromWireValue)
     },
     construct(_target) {
-      throw new Error("Unsupported call to construct");
+      throw new Error('Unsupported call to construct')
     },
   })
   registerProxy(proxy, ep)

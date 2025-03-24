@@ -5,7 +5,7 @@
       "tsconfig.json",
       "tsconfig.*.json",
       "packages/tsconfig",
-      "frame-host/src/comlink",
+      "frame-host/src/v0/comlink",
       "package.json"
     ]
   },

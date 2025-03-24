@@ -10,8 +10,8 @@ import type {
   EIP6963ProviderDetail,
 } from 'mipd'
 import { Provider, RpcRequest, RpcResponse } from 'ox'
-import { frameHost } from './frameHost'
 import { endpoint } from './endpoint'
+import { frameHost } from './frameHost'
 
 const emitter = Provider.createEmitter()
 const store = RpcRequest.createStore()

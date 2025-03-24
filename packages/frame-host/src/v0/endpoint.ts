@@ -6,8 +6,8 @@ import {
 } from '@farcaster/frame-core'
 import { type Provider as EthProvider, RpcResponse } from 'ox'
 import { useEffect } from 'react'
-import * as Comlink from './comlink'
 import type { HostEndpoint } from '../types'
+import * as Comlink from './comlink'
 import { wrapProviderRequest } from './provider'
 import { wrapHandlers } from './sdk'
 

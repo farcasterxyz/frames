@@ -2,11 +2,11 @@ import type { FrameHost, MessageChannel } from '@farcaster/frame-core'
 import type { Provider } from 'ox'
 import { exposeProvider } from './appProvider'
 import { exposeProvider as exposeEthProvider } from './ethProvider'
+import { fromHost } from './host'
+import type { HostEndpoint } from './types'
 import { exposeToEndpoint } from './v0/endpoint'
 import { wrapProviderRequest } from './v0/provider'
 import { wrapHandlers } from './v0/sdk'
-import { fromHost } from './host'
-import type { HostEndpoint } from './types'
 
 /**
  * An endpoint of communicating with an iFrame

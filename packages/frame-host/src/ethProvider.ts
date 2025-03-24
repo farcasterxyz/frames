@@ -52,8 +52,14 @@ export function exposeProvider({
             }
           }
 
-          // TODO actually just return unknown
-          throw e
+          return {
+            id: request.id,
+            jsonrpc: request.jsonrpc,
+            error: {
+              code: RpcResponse.InternalError.code,
+              message: `Internal error: ${e}`,
+            },
+          }
         }
       })()
 

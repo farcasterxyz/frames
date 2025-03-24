@@ -6,10 +6,10 @@ import {
   SignIn,
 } from '@farcaster/frame-core'
 import type { EIP1193Provider } from 'mipd'
+import { endpoint } from './endpoint'
 import { announceProvider } from './ethProvider'
 import * as EthProvider from './ethProvider'
 import { frameHost } from './frameHost'
-import { endpoint } from './endpoint'
 import type { FrameSDK } from './types'
 
 const emitter = Provider.createEmitter()
