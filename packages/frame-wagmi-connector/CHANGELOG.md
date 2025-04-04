@@ -1,5 +1,11 @@
 # @farcaster/frame-wagmi-connector
 
+## 0.0.22
+
+### Patch Changes
+
+- [#181](https://github.com/farcasterxyz/miniapps/pull/181) [`53cd059`](https://github.com/farcasterxyz/miniapps/commit/53cd059efa0ef0b1b6304078c9a4599a94bc60eb) Thanks [@deodad](https://github.com/deodad)! - Updated farcaster frame rdns and name in wagmi connector"
+
 ## 0.0.21
 
 ### Patch Changes
